@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+    <body ng-app="myApp">
+        
+        <div ng-controller="HomeController">
+            <form ng-submit="submit()">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <script src="scripts/angular.js"></script>
+        <script src="scripts/angular-resource.js"></script>
+        <script>
+            angular.module('myApp', ['ngResource']);
+            angular.module('myApp').
+                controller('HomeController', function($scope, $resource) {
+                    var Program = $resource('/api/program/:id', {}, {
+                        getByCriteria: { url: '/api/program/getbycriteria', method: 'GET', isArray: true }
+                    });
+
+                    var program = new Program();
+                    var criteria = {
+                        Categories: [
+                            {
+                                Name: "Cat1",
+                                Options: [
+                                    { Text: "Opt1", Value: true },
+                                    { Text: "Opt2", Value: false }
+                                ]
+                            },
+                            {
+                                Name: "Cat2",
+                                Options: [
+                                    { Text: "Opt3", Value: true },
+                                    { Text: "Opt4", Value: false }
+                                ]
+                            }
+                        ]
+                    };
+
+                    $scope.submit = function () {
+                        console.log(program);
+                        program.$getByCriteria(criteria);
+                    };
+                });
+        </script>
+    </body>
+</html>
